@@ -1,0 +1,14 @@
+{
+  "name": "load-api",
+  "version": "1.0.0",
+  "description": "REST API to run k6 scenarios",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "pidusage": "^3.0.2"
+  }
+}

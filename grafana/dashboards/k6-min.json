@@ -1,0 +1,59 @@
+{
+  "title": "k6 - Minimal",
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "panels": [
+    {
+      "type": "graph",
+      "title": "HTTP Req Duration (p95)",
+      "targets": [
+        {
+          "measurement": "http_req_duration",
+          "groupBy": [{"type":"time","params":["10s"]}],
+          "select": [[{"type":"field","params":["value"]},{"type":"percentile","params":[95]}]],
+          "refId": "A",
+          "resultFormat": "time_series",
+          "dsType": "influxdb",
+          "datasource": "InfluxDB-k6"
+        }
+      ],
+      "id": 1,
+      "gridPos": {"x":0,"y":0,"w":12,"h":8}
+    },
+    {
+      "type": "graph",
+      "title": "HTTP RPS",
+      "targets": [
+        {
+          "measurement": "http_reqs",
+          "groupBy": [{"type":"time","params":["10s"]}],
+          "select": [[{"type":"field","params":["count"]},{"type":"mean","params":[]}]],
+          "refId": "B",
+          "resultFormat": "time_series",
+          "dsType": "influxdb",
+          "datasource": "InfluxDB-k6"
+        }
+      ],
+      "id": 2,
+      "gridPos": {"x":12,"y":0,"w":12,"h":8}
+    },
+    {
+      "type": "graph",
+      "title": "Fail Rate",
+      "targets": [
+        {
+          "measurement": "http_req_failed",
+          "groupBy": [{"type":"time","params":["10s"]}],
+          "select": [[{"type":"field","params":["rate"]},{"type":"mean","params":[]}]],
+          "refId": "C",
+          "resultFormat": "time_series",
+          "dsType": "influxdb",
+          "datasource": "InfluxDB-k6"
+        }
+      ],
+      "id": 3,
+      "gridPos": {"x":0,"y":8,"w":12,"h":8}
+    }
+  ]
+}
