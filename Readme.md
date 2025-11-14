@@ -1,12 +1,13 @@
-🚀 Load Testing Platform (K6 + Grafana + Prometheus + InfluxDB)
+🚀** Load Testing Platform (K6 + Grafana + Prometheus + InfluxDB) **
 
 이 레포지토리는 K6 기반 부하 테스트 플랫폼 템플릿입니다.
 API 서버가 무엇이든 간에, K6 시나리오를 실행하고 메트릭을 수집하여 Grafana 대시보드로 시각화할 수 있습니다.
 
 Spring Boot 등 외부 서비스와 의존성이 없으며, curl 요청만으로 부하 테스트를 시작할 수 있는 구조입니다.
 
-📂 프로젝트 구조
+📂*** 프로젝트 구조 ***
 .
+'''
 ├── docker-compose.yml
 ├── grafana
 │   ├── dashboards
@@ -29,8 +30,8 @@ Spring Boot 등 외부 서비스와 의존성이 없으며, curl 요청만으로
     ├── health.js
     ├── load.js
     └── spike.js
-
-🐳 1. 실행 방법
+'''
+🐳 **1. 실행 방법**
 1) 의존성 설치 & 컨테이너 실행
 docker compose up -d --build
 
@@ -46,12 +47,12 @@ Grafana (3001포트)
 
 K6 (load-api 내부에서 실행됨)
 
-⚡ 2. 부하 테스트 실행 방법
+⚡** 2. 부하 테스트 실행 방법 **
 
 부하 시나리오는 /scenarios 폴더 안에 .js 파일로 작성합니다.
 예: load.js, spike.js, health.js
 
-🔥 Load 테스트 실행
+🔥 **Load 테스트 실행**
 curl -X POST http://localhost:3000/load/start \
   -H "Content-Type: application/json" \
   -d '{"scenario":"load.js","vus":200,"duration":"2m"}'
@@ -93,7 +94,7 @@ PW: admin
 
 load-api는 단순히 K6를 대신 실행해주는 “부하 테스트 오케스트레이터” 역할만 수행합니다.
 
-🧪 5. 시나리오 작성 예시
+🧪 ** 5. 시나리오 작성 예시 **
 
 scenarios/load.js
 
@@ -113,7 +114,7 @@ export default function () {
 
 TARGET_URL 은 load-api 환경변수를 통해 주입됩니다.
 
-🛠 6. load-api 설명
+🛠 ** 6. load-api 설명 **
 /load/start 엔드포인트
 POST /load/start
 {
@@ -132,7 +133,7 @@ POST /load/start
 
 Grafana에서 실시간 확인 가능
 
-📌 7. 환경 변수
+📌** 7. 환경 변수 **
 TARGET_URL 설정 (테스트 대상 API)
 
 docker-compose.yml → load-api
@@ -140,7 +141,7 @@ docker-compose.yml → load-api
 environment:
   - TARGET_URL=http://your-api-url.com
 
-🚀 8. 확장 방법
+🚀** 8. 확장 방법 **
 
 /scenarios 에 새로운 시나리오 추가
 
