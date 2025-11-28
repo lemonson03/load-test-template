@@ -1,64 +1,48 @@
 version: "3.9"
 
 services:
-  load-api:
-    build: ./load-api
-    container_name: load-api
-    environment:
-      # 기본값: .env에서 덮어쓰기
-      - TARGET_URL=${TARGET_URL:-http://dev-worker:8080}
-      - INFLUX_URL=http://influxdb:8086
-      - INFLUX_DB=k6
-    volumes:
-      - ./scenarios:/app/scenarios:ro
-    ports:
-      - "3000:3000"
-    depends_on:
-      - influxdb
-
   influxdb:
     image: influxdb:1.8
-    container_name: influxdb
-    environment:
-      - INFLUXDB_DB=k6
     ports:
       - "8086:8086"
     volumes:
-      - influxdb-data:/var/lib/influxdb
-      - ./influxdb/init.iql:/docker-entrypoint-initdb.d/init.iql:ro
-
-  prometheus:
-    image: prom/prometheus:v2.55.1
-    container_name: prometheus
-    command: ["--config.file=/etc/prometheus/prometheus.yml","--storage.tsdb.retention.time=15d"]
-    volumes:
-      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-    ports:
-      - "9090:9090"
-
-  node-exporter:
-    image: prom/node-exporter:v1.8.2
-    container_name: node-exporter
-    ports:
-      - "9100:9100"
+      - ./influxdb:/var/lib/influxdb
+    environment:
+      - INFLUXDB_DB=k6
+      - INFLUXDB_ADMIN_ENABLED=true
 
   grafana:
     image: grafana/grafana:11.1.0
-    container_name: grafana
     ports:
       - "3001:3000"
-    environment:
-      - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=admin
-      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
     volumes:
-      - grafana-data:/var/lib/grafana
-      - ./grafana/provisioning:/etc/grafana/provisioning:ro
-      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
+      - ./grafana/provisioning:/etc/grafana/provisioning
+
+  load-api:
+    build: ./load-api
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./scenarios:/scripts
     depends_on:
       - influxdb
-      - prometheus
 
-volumes:
-  influxdb-data:
-  grafana-data:
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+
+  target-server:
+    build: ./target-server
+    ports:
+      - "4000:4000"
+
+  k6:
+    image: grafana/k6
+    volumes:
+      - ./scenarios:/scripts
+    networks:
+      - default
